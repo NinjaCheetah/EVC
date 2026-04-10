@@ -10,6 +10,26 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+
+    services:
+      # Postgres container needed to run the tests.
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_USERNAME: username
+          POSTGRES_PASSWORD: password
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v6
 
@@ -21,6 +41,12 @@ jobs:
       - name: Build
         run: go build -v ./...
 
-#      - name: Test
-#        run: go test -v ./...
+      # We need to prepare the default config and also generate a dummy key
+      # to use during the tests.
+      - name: Prepare for Tests
+        run: |
+          cp config_example.xml config.xml
+          openssl genpkey -algorithm RSA -out Private.pem -pkeyopt rsa_keygen_bits:2048
 
+      - name: Test
+        run: go test -v ./...
