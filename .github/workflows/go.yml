@@ -47,7 +47,7 @@ jobs:
         run: |
           cp config_example.xml config.xml
           openssl genpkey -algorithm RSA -out Private.pem -pkeyopt rsa_keygen_bits:2048
-          psql -U username -d EVC -f "db.sql"
+          psql "postgresql://username:password@localhost:5432/EVC" < db.sql
 
       - name: Test
         run: go test -v ./...
