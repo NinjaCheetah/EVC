@@ -18,7 +18,7 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRES_USERNAME: username
+          POSTGRES_USER: username
           POSTGRES_PASSWORD: password
         # Set health checks to wait until postgres has started
         options: >-
@@ -47,6 +47,7 @@ jobs:
         run: |
           cp config_example.xml config.xml
           openssl genpkey -algorithm RSA -out Private.pem -pkeyopt rsa_keygen_bits:2048
+          psql -U username -d EVC -f "db.sql"
 
       - name: Test
         run: go test -v ./...
