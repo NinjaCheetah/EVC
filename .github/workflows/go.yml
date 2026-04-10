@@ -47,6 +47,7 @@ jobs:
       - name: Prepare for Tests
         run: |
           cp config_example.xml config.xml
+          mkdir votes
           openssl genpkey -algorithm RSA -out Private.pem -pkeyopt rsa_keygen_bits:2048
           psql "postgresql://username:password@localhost:5432/EVC" < db.sql
 
