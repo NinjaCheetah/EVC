@@ -20,6 +20,7 @@ jobs:
         env:
           POSTGRES_USER: username
           POSTGRES_PASSWORD: password
+          POSTGRES_DB: EVC
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
